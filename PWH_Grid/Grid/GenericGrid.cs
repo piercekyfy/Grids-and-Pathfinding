@@ -65,7 +65,7 @@ namespace PWH.Grid
             }
             else
             {
-                return default(T);
+                return default;
             }
         }
 
@@ -137,6 +137,17 @@ namespace PWH.Grid
         }
 
         #endregion
+
+        public void RedrawDebug()
+        {
+            for (int x = 0; x < map.GetLength(0); x++)
+            {
+                for (int y = 0; y < map.GetLength(1); y++)
+                {
+                    textMeshMap[x, y].text = map[x, y].ToString();
+                }
+            }
+        }
 
         private void ShowDebug(int width, int height, float textScale, int textFontSize)
         {

@@ -8,7 +8,7 @@ namespace PWH.Grid.Examples
 {
     public class GridHolder : MonoBehaviour
     {
-        GenericGrid<PathGridObject> grid;
+        GenericGrid<GridCell> grid;
 
         private void Start()
         {
@@ -23,8 +23,8 @@ namespace PWH.Grid.Examples
             // When Initializing a grid you need to provide it with a function that returns an instance of whatever type
             // of object the grid holds.
 
-            grid = new GenericGrid<PathGridObject>(width, height,
-                (GenericGrid<PathGridObject> source, int x, int y) => GenerateNewPathGridObject(source,x,y)
+            grid = new GenericGrid<GridCell>(width, height,
+                (GenericGrid<GridCell> source, int x, int y) => GenerateNewGridCell(source,x,y)
                 ,cellSize,doDebug,debugTextScale,debugTextFontSize);
 
             Pathfinder pathfinder = Pathfinder.instance;
@@ -43,19 +43,21 @@ namespace PWH.Grid.Examples
             float debugDuration = 10f;
 
             List<IPathfindingNode> path = pathfinder.Init(graph, startNode, endNode, doDebug, debugDuration);
+
             
+
             // The pathfinder returns the path to the goal node in order from start to goal.
             // You can reverse engineer it with graph.GetWorldPositionCentered() to move something along it
             // I recommend DoTween Sequences for this
         }
 
         // Randomises the cell's movement difficulty in the grid between passable (1) and impassable (0)
-        PathGridObject GenerateNewPathGridObject(GenericGrid<PathGridObject> source,int x,int y)
+        GridCell GenerateNewGridCell(GenericGrid<GridCell> source,int x,int y)
         {
             // This randomisation is commented out so that the Pathfinder works on first try. To preview it simply remove
             // the 1 and /* */
             int movementDifficulty = Random.Range(/*0*/1, 2);
-            return new PathGridObject(source, x, y, movementDifficulty);
+            return new GridCell(source, x, y, movementDifficulty);
         }
     }
 }

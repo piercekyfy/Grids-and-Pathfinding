@@ -38,7 +38,12 @@ namespace PWH.Grid.Pathfinding
             if (startNode == null) { Debug.LogWarning("Pathfinder Error: Start node is null"); return null; }
             if (goalNode == null) { Debug.LogWarning("Pathfinder Error: Goal node is null"); return null; }
 
-            if (!startNode.traversable || !goalNode.traversable) {Debug.LogWarning("Pathfinder Error: Start/Goal node is not traversable"); return null; }
+            // Had to remove this line as I found checking if the startNode is traversable
+            // got in the way with creating a cell inhabited system and I figure there is no reason to check it anyway
+            // considering that if the start node is not traversable, you've probably done something wrong already and want the player out of there
+
+            //if (!startNode.traversable) {Debug.LogWarning("Pathfinder Error: Start node is not traversable"); return null; }
+            if(!goalNode.traversable) { Debug.LogWarning("Pathfinder Error: Goal node is not traversable"); return null; }
             if (startNode == goalNode) { Debug.LogWarning("Pathfinder Error: Startnode == goal node"); return null; }
 
             this.graph = graph;

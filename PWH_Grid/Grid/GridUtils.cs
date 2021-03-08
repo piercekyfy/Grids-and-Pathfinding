@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace PWH.Grid
 {
+    // The grid needs to be ontop of a surface with a collider as it uses raycasts
+
     public static class GridUtils
     {
         public static T GetGridValueAtMousePos<T>(GenericGrid<T> grid, Camera camera) where T : System.IEquatable<T>
