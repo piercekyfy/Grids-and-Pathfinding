@@ -69,7 +69,7 @@ namespace PWH.Grid.Pathfinding
 
         public static GenericGrid<IPathfindingNode> ConvertGridToGraph<T>(GenericGrid<T> grid) where T : System.IEquatable<T>
         {
-            GenericGrid<IPathfindingNode> graph = new GenericGrid<IPathfindingNode>(grid.width, grid.height,
+            GenericGrid<IPathfindingNode> graph = new GenericGrid<IPathfindingNode>(Vector2.zero,grid.width, grid.height,
                 (GenericGrid<IPathfindingNode> source, int x, int y) =>
                 {
                     return null;
@@ -79,9 +79,9 @@ namespace PWH.Grid.Pathfinding
             {
                 for (int y = 0; y < grid.height; y++)
                 {
-                    if (grid.GetValue(x, y) is IPathfindingNode)
+                    if (grid.GetValue(x, y,out bool foundValue) is IPathfindingNode)
                     {
-                        graph.map[x, y] = (IPathfindingNode)grid.GetValue(x, y);
+                        graph.map[x, y] = (IPathfindingNode)grid.GetValue(x, y,out bool _foundValue);
                     }
                 }
             }

@@ -23,7 +23,7 @@ namespace PWH.Grid.Examples
             // When Initializing a grid you need to provide it with a function that returns an instance of whatever type
             // of object the grid holds.
 
-            grid = new GenericGrid<GridCell>(width, height,
+            grid = new GenericGrid<GridCell>(Vector2.zero,width, height,
                 (GenericGrid<GridCell> source, int x, int y) => GenerateNewGridCell(source,x,y)
                 ,cellSize,doDebug,debugTextScale,debugTextFontSize);
 
@@ -37,8 +37,8 @@ namespace PWH.Grid.Examples
 
             GenericGrid<IPathfindingNode> graph = PathfinderUtils.ConvertGridToGraph(grid);
 
-            IPathfindingNode startNode = graph.GetValue(0, 0);
-            IPathfindingNode endNode = graph.GetValue(4, 4);
+            IPathfindingNode startNode = graph.GetValue(0, 0, out bool foundValue);
+            IPathfindingNode endNode = graph.GetValue(4, 4, out bool _foundValue);
 
             float debugDuration = 10f;
 

@@ -3,27 +3,31 @@ using UnityEngine;
 
 namespace PWH.Grid
 {
-    public class GenericGrid<T> where T : System.IEquatable<T>
+    public class GenericGrid<T>
     {
+        public Vector3 offset { get; private set; }
         public int width { get; private set; }
         public int height { get; private set; }
 
         public float cellSize { get; private set; }
 
         public T[,] map { get; private set; }
+        public Dictionary<T, Vector2Int> coordMap { get; private set; }
 
         event System.EventHandler<GridValueChangedEventArgs> GridValueChanged;
 
         TextMesh[,] textMeshMap;
 
 
-        public GenericGrid(int width, int height, System.Func<GenericGrid<T>, int, int, T> createGridObject, float cellSize = 1f, bool showDebug = false, float textScale = 0.1f, int textFontSize = 40)
+        public GenericGrid(Vector2 position,int width, int height, System.Func<GenericGrid<T>, int, int, T> createGridObject, float cellSize = 1f, bool showDebug = false, float textScale = 0.1f, int textFontSize = 40)
         {
+            this.offset = position;
             this.width = width;
             this.height = height;
             this.cellSize = cellSize;
 
             map = new T[width, height];
+            coordMap = new Dictionary<T, Vector2Int>();
 
             // Init Values with the provided Func
 
@@ -31,7 +35,9 @@ namespace PWH.Grid
             {
                 for (int y = 0; y < map.GetLength(1); y++)
                 {
-                    map[x, y] = createGridObject(this, x, y);
+                    T newObject = createGridObject(this, x, y);
+                    map[x, y] = newObject;
+                    coordMap.Add(newObject, new Vector2Int(x, y));
                 }
             }
 
@@ -44,7 +50,15 @@ namespace PWH.Grid
 
         public void SetValue(int x, int y, T value)
         {
+            T cell = GetValue(x, y, out bool foundValue);
+            if (foundValue)
+            {
+                coordMap.Remove(cell);
+            }
+            
             map[x, y] = value;
+
+            coordMap.Add(value, new Vector2Int(x, y));
 
             OnValueChanged(x, y);
         }
@@ -57,14 +71,16 @@ namespace PWH.Grid
             SetValue(x, y, value);
         }
 
-        public T GetValue(int x, int y)
+        public T GetValue(int x, int y,out bool foundValue)
         {
             if (WithinBounds(x, y))
             {
+                foundValue = true;
                 return map[x, y];
             }
             else
             {
+                foundValue = false;
                 return default;
             }
         }
@@ -86,16 +102,27 @@ namespace PWH.Grid
 
         public Vector3 GetWorldPosition(int x, int y)
         {
-            return new Vector3(x, 0, y) * cellSize;
+            return new Vector3(x + offset.x, 0, y + offset.y) * cellSize;
         }
 
         public Vector3 GetWorldPositionCentered(int x, int y)
         {
-            return new Vector3(x + cellSize / 2, 0, y + cellSize / 2) * cellSize;
+            return new Vector3(x + offset.x + cellSize / 2, 0, y + offset.y + cellSize / 2) * cellSize;
         }
 
         public void GetXY(T cell, out int x, out int y)
         {
+            if(coordMap.TryGetValue(cell, out Vector2Int value))
+            {
+                x = value.x;
+                y = value.y;
+            } else
+            {
+                x = -1;
+                y = -1;
+            }
+
+            /*
             for (int _x = 0; _x < map.GetLength(0); _x++)
             {
                 for (int _y = 0; _y < map.GetLength(1); _y++)
@@ -110,10 +137,13 @@ namespace PWH.Grid
             }
             x = -1;
             y = -1;
+            */
         }
 
         public void GetXY(Vector3 worldPosition, out int x, out int y)
         {
+            worldPosition.x -= offset.x;
+            worldPosition.z -= offset.y;
             x = Mathf.FloorToInt(worldPosition.x / cellSize);
             y = Mathf.FloorToInt(worldPosition.z / cellSize);
         }
@@ -149,6 +179,11 @@ namespace PWH.Grid
             }
         }
 
+        public void RedrawDebug(int x,int y)
+        {
+            textMeshMap[x, y].text = map[x, y].ToString();
+        }
+
         private void ShowDebug(int width, int height, float textScale, int textFontSize)
         {
             textMeshMap = new TextMesh[map.GetLength(0), map.GetLength(1)];
@@ -169,6 +204,7 @@ namespace PWH.Grid
                     textMesh.fontSize = textFontSize;
                     textMesh.anchor = TextAnchor.MiddleCenter;
                     textMesh.text = map[x, y]?.ToString();
+                    textMesh.color = Color.black;
 
                     textMeshMap[x, y] = textMesh;
                 }
@@ -177,7 +213,7 @@ namespace PWH.Grid
             Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.black, 9999f, false);
             Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.black, 9999f, false);
 
-            GridValueChanged += (object sender, GridValueChangedEventArgs args) => { textMeshMap[args.x, args.y].text = GetValue(args.x, args.y)?.ToString(); };
+            GridValueChanged += (object sender, GridValueChangedEventArgs args) => { textMeshMap[args.x, args.y].text = GetValue(args.x, args.y,out bool foundValue)?.ToString(); };
         }
 
         public class GridValueChangedEventArgs : System.EventArgs
