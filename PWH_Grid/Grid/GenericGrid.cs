@@ -107,7 +107,21 @@ namespace PWH.Grid
 
         public Vector3 GetWorldPositionCentered(int x, int y)
         {
-            return new Vector3(x + offset.x + cellSize / 2, 0, y + offset.y + cellSize / 2) * cellSize;
+            return new Vector3(x + offset.x, 0, y + offset.y) * cellSize + new Vector3(cellSize / 2, 0, cellSize / 2);
+        }
+
+        public Vector3 GetWorldPosition(T cell)
+        {
+            GetXY(cell, out int x, out int y);
+
+            return new Vector3(x + offset.x, 0, y + offset.y) * cellSize;
+        }
+
+        public Vector3 GetWorldPositionCentered(T cell)
+        {
+            GetXY(cell, out int x, out int y);
+
+            return new Vector3(x + offset.x, 0, y + offset.y) * cellSize + new Vector3(cellSize / 2, 0, cellSize / 2);
         }
 
         public void GetXY(T cell, out int x, out int y)
@@ -205,6 +219,7 @@ namespace PWH.Grid
                     textMesh.anchor = TextAnchor.MiddleCenter;
                     textMesh.text = map[x, y]?.ToString();
                     textMesh.color = Color.black;
+                    textMesh.alignment = TextAlignment.Center;
 
                     textMeshMap[x, y] = textMesh;
                 }
