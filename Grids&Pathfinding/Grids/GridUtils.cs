@@ -16,7 +16,6 @@ namespace PWH.Grids
             if(Physics.Raycast(mouseRay, out RaycastHit hit))
             {
                 grid.GetXY(hit.point, out int x, out int y);
-                Debug.Log(x + " " + y);
 
                 T cell;
                 try
