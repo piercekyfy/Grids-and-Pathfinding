@@ -7,10 +7,12 @@
 
 ### The Square Grid with Pathfinding
 https://user-images.githubusercontent.com/80215001/121910671-f3f05f80-cd26-11eb-8b0a-b931839177ee.mp4
+
 can be located at Grids&Pathfinding/Examples/SquareGrid.unity
 
 ### The Hexagon Grid
 https://user-images.githubusercontent.com/80215001/121910619-e9ce6100-cd26-11eb-842a-32eb7ca3288f.mp4
+
 can be located at Grids&Pathfinding/Examples/HexagonGrid.unity
 
 ## Example of Use
@@ -63,3 +65,21 @@ HexagonGrid<int> hexGrid =
     0.075f// Debug Font Scale
 ); 
 ```
+To generate a mesh with your newly created HexagonGrid, simply call:
+`hexGrid.GenerateMesh(GetComponent<MeshFilter>(), GetComponent<MeshCollider>())`
+
+## Pathfinding
+#See Grids&Pathfinding/Examples/PathGridObject on how to implement IPathfindingNode and setup your GridCell Object to work with pathfinding!
+
+The PathFinder is the powerhouse of all pathfinding, it is a Singleton which simply needs to be placed in your scene, from there you can get a List<IPathfindingNodes> from calling PathFinder.Instance.Init().
+  
+This List is the path from your specified start to your specified goal in order.
+
+It takes a Grid<IPathfindingNode> as it's **first argument**, if you have a Grid of elements that inherit from IPathfinding Node, simply give it to the utility function:
+  PathfinderUtils.ConvertGridToGraph<T>(Your Grid), and it will return a Grid<IPathfindingNode> which you can give to the pathFinder.
+  
+From there you simply get your first node and goal node and pass them into the .Init() as the **second and third argument** respectively.
+  
+There is also a **third argument** which is a Debug option to show the path it generated in red.
+  
+**The Pathfinder has 4 modes:** AStar, GBFS, Dijkstra and BFS, this mode can be set in the inspector or by the `PathFinder.Instance.mode =` field.
