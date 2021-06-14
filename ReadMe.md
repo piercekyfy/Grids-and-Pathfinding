@@ -69,7 +69,7 @@ To generate a mesh with your newly created HexagonGrid, simply call:
 `hexGrid.GenerateMesh(GetComponent<MeshFilter>(), GetComponent<MeshCollider>())`
 
 ## Pathfinding
-# See Grids&Pathfinding/Examples/PathGridObject on how to implement IPathfindingNode and setup your GridCell Object to work with pathfinding!
+### See Grids&Pathfinding/Examples/PathGridObject on how to implement IPathfindingNode and setup your GridCell Object to work with pathfinding!
 
 The PathFinder is the powerhouse of all pathfinding, it is a Singleton which simply needs to be placed in your scene, from there you can get a List<IPathfindingNodes> from calling PathFinder.Instance.Init().
   
