@@ -148,9 +148,9 @@ namespace PWH.Grids
             else
             {
                 if (Gridaxis == GridAxis.XY)
-                    return new Vector3(x + WorldSpaceOffset.x, y + WorldSpaceOffset.y, WorldSpaceOffset.z) * WorldSpaceCellSize;
+                    return ((new Vector3(x, y, 0) * WorldSpaceCellSize) + WorldSpaceOffset);
                 else
-                    return new Vector3(x + WorldSpaceOffset.x, WorldSpaceOffset.y, y + WorldSpaceOffset.y) * WorldSpaceCellSize;
+                    return (new Vector3(x , 0, y) * WorldSpaceCellSize) + WorldSpaceOffset;
             }
         }
 
