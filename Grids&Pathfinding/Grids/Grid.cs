@@ -80,7 +80,9 @@ namespace PWH.Grids
             if ((x < 0f || y < 0f) || (x > Map.GetLength(0) - 1 || y > Map.GetLength(1) - 1)) { return false; }
             return true;
         }
-
+        
+        // I couldn't find a bug-free way to do this without this expensive method,
+        // If you notice this function takes too much time, use the commented method. However do not use the commented method for hexagon grids
         public virtual void GetXY(Vector3 worldPosition, out int x, out int y)
         {
             /*
