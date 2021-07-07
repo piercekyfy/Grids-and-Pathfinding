@@ -83,10 +83,17 @@ namespace PWH.Grids
 
         public virtual void GetXY(Vector3 worldPosition, out int x, out int y)
         {
-            worldPosition.x -= WorldSpaceOffset.x;
-            worldPosition.z -= WorldSpaceOffset.y;
-            x = Mathf.FloorToInt(worldPosition.x / WorldSpaceCellSize);
-            y = Mathf.FloorToInt(worldPosition.z / WorldSpaceCellSize);
+            Vector3 worldPositionWithOffset = worldPosition - WorldSpaceOffset;
+            if(Gridaxis == GridAxis.XY)
+            {
+                x = Mathf.FloorToInt(worldPositionWithOffset.x / WorldSpaceCellSize);
+                y = Mathf.FloorToInt(worldPositionWithOffset.y / WorldSpaceCellSize);
+            }
+            else
+            {
+                x = Mathf.FloorToInt(worldPositionWithOffset.x / WorldSpaceCellSize);
+                y = Mathf.FloorToInt(worldPositionWithOffset.z / WorldSpaceCellSize);
+            }
         }
 
         public virtual void GetXY(T cell, out int x, out int y)
