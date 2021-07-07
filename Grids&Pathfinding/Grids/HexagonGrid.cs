@@ -60,29 +60,7 @@ namespace PWH.Grids
 
             if (showDebug) { ShowDebug(debugFontSize, debugFontScale); };
         }
-
-        // I'm not very proud of this implementation, I'm sure there is a better way with some hexagon-math,
-        // however I have struggled to find it so this will have to remain a working placeholder for now.
-        public override void GetXY(Vector3 worldPosition, out int x, out int y)
-        {
-            for (int _x = 0; _x < Map.GetLength(0); _x++)
-            {
-                for (int _y = 0; _y < Map.GetLength(1); _y++)
-                {
-                    Vector3 offset = GetWorldPosition(Map[_x, _y]) - worldPosition;
-                    if (offset.sqrMagnitude <= WorldSpaceCellSize * WorldSpaceCellSize)
-                    {
-                        x = _x;
-                        y = _y;
-                        return;
-                    }
-                }
-            }
-
-            x = -1;
-            y = -1;
-        }
-
+        
         public override float GetCellDistance(int x1, int y1, int x2, int y2)
         {
             int dx = x2 - x1;     // signed deltas
